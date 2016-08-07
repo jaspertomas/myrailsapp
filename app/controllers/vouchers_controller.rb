@@ -79,6 +79,7 @@ class VouchersController < ApplicationController
 
   # GET /vouchers/1/edit
   def edit
+    @accounts = VoucherAccount.all
   end
 
   # POST /vouchers
