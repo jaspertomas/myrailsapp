@@ -63,3 +63,22 @@ Search Voucher:	<input id=vouchersearchinput autocomplete="off" size=12>
     <% end%>
 </table>
 
+
+
+
+<script>
+$("#vouchersearchinput").keyup(function(event){
+	//if 3 or more letters in search box
+    //if($("#vouchersearchinput").val().length>=3){
+
+    //if enter key is pressed
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+    var url="<%=request.base_url%>/vouchers/search?fragment=1&searchstring="+$("#vouchersearchinput").val();
+	    $.ajax({url: url, success: function(result){
+	 		  $("#vouchersearchresult").html(result);
+	    }});
+    }
+});
+
+</script>

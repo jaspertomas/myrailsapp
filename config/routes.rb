@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'vouchers#dashboard'
   get 'vouchers/help'
+  get 'vouchers/search'
   get 'vouchers/dashboard'
   post 'vouchers/editNo'
   post 'vouchers/editAmount'

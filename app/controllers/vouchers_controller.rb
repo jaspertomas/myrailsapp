@@ -1,6 +1,18 @@
 class VouchersController < ApplicationController
   before_action :set_voucher, only: [:show, :edit, :update, :destroy]
 
+  def search
+    searchkeys = params['searchstring']
+    searchkeys ||= ""
+    searchkeys = searchkeys.split(" ")
+    @vouchers = Voucher.all
+    searchkeys.each do |key|
+      @vouchers = @vouchers.where("no = \"#{key}\" or description like \"%#{key}%\" or payee like \"%#{key}%\"")
+    end
+  
+    render :layout => false if params['fragment']
+  end
+  
   def editNo
     voucher=Voucher.find(params['id'])
     voucher.no=params['no']

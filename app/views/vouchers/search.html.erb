@@ -1,0 +1,27 @@
+<h1>Voucher Search</h1>
+<% if(@vouchers.count == 0)%>
+  <tr>
+    <td>No vouchers found</td>
+  </tr>
+<% else %>
+<table border=1>
+  <tr>
+    <td>Date</td>
+    <td>Voucher No.</td>
+    <td>Account</td>
+    <td>Payee</td>
+    <td>Amount</td>
+    <td>Particulars</td>
+  </tr>
+    <% @vouchers.each do |voucher|    %>
+  <tr>
+    <td><% concat voucher.date%></td>
+    <td><% concat link_to(voucher.no,"/vouchers/dashboard?date="+voucher.date.to_s)%></td>
+    <td><% concat voucher.voucher_account.name%></td>
+    <td><% concat voucher.payee%></td>
+    <td><% concat voucher.amount%></td>
+    <td><% concat voucher.description%></td>
+  </tr>
+    <% end%>
+</table>
+<% end %>
