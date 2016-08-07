@@ -5,11 +5,16 @@ class VouchersController < ApplicationController
     searchkeys = params['searchstring']
     searchkeys ||= ""
     searchkeys = searchkeys.split(" ")
-    @vouchers = Voucher.all
-    searchkeys.each do |key|
-      @vouchers = @vouchers.where("no = \"#{key}\" or description like \"%#{key}%\" or payee like \"%#{key}%\"")
+    
+    if searchkeys.count==0
+      @vouchers = []
+    else
+      @vouchers = Voucher.all
+      searchkeys.each do |key|
+        @vouchers = @vouchers.where("no = \"#{key}\" or description like \"%#{key}%\" or payee like \"%#{key}%\"")
+      end
     end
-  
+      
     render :layout => false if params['fragment']
   end
   
