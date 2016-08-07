@@ -29,7 +29,7 @@
   </div>
   <div class="field">
     <%= f.label :voucher_account_id %><br>
-    <%= f.select :voucher_account_id, options_for_select(VoucherAccount.all.map{|s|[s.name, s.id]}, include_blank: true) %>
+    <%= f.select :voucher_account_id, options_for_select(@accounts.map{|s|[s.name, s.id]}, include_blank: true) %>
   </div>
   <div class="field">
     <%= f.label :amount %><br>
