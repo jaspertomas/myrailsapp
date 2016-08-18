@@ -1,0 +1,36 @@
+<% 
+today = Date.current
+yesterday = Date.yesterday
+tomorrow = Date.tomorrow
+%>
+
+<%= form_tag("/vouchers/input_wizard_1", method: "get") do %>
+<table>
+  <tr>
+    <td>Date</td>
+    <td>  <%= date_select("dateholder", "date", :order => [:month, :day, :year], :use_short_month => true)  %>
+    </td>
+    <td>  <%= submit_tag("View") %></td>
+  </tr>
+</table>
+<% end %>
+
+    <%= link_to("Yesterday","/vouchers/wizard_input_1?date"+yesterday.to_s); %> | 
+    <%= link_to("Tomorrow","/vouchers/wizard_input_1?date"+tomorrow.to_s); %> | 
+    <%= link_to("Voucher Sorting Wizard","/vouchers/wizard_input2?date="+@dateholder.date.to_s) %> | 
+    <%= link_to("Back to Voucher Dashboard","/vouchers/dashboard?date="+@dateholder.date.to_s) %>
+
+<h2>Expense Vouchers: Input Wizard: <%= @dateholder.date.strftime("%v") %></h2>
+
+<hr>
+Please make sure the date above is correct
+<br>Write one per line, in the format of 
+<br>"voucher number -- payee -- description -- amount"
+<br>Example: 1234 -- Juan -- Mineral Water -- 50
+
+<%= form_tag("/vouchers/wizard_process_input_1")%>
+<input type=hidden id=date name=date value="<%= @dateholder.date.to_s%>">
+<input type=submit value=Save>
+<br><textarea name=input id=input rows=10 cols=80><%= @meta %></textarea>
+</form>
+

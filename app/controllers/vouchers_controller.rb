@@ -1,6 +1,22 @@
 class VouchersController < ApplicationController
   before_action :set_voucher, only: [:show, :edit, :update, :destroy]
 
+  def input_wizard_1
+  	#if params[date] exists, save it to dateholder 
+  	#else if params[dateholder] exists, save it to dateholder 
+  	#else, default value is today
+  	set_dateholder
+  end
+  def process_input_wizard_1
+    set_dateholder
+    redirect_to vouchers_input_wizard_1_path+"?date="+@dateholder.date.to_s 
+  end
+  def input_wizard_2
+  end
+  def process_input_wizard_2
+    set_dateholder
+    redirect_to vouchers_input_wizard_2_path+"?date="+@dateholder.date.to_s 
+  end
   def search
     searchkeys = params['searchstring']
     searchkeys ||= ""
@@ -51,16 +67,7 @@ class VouchersController < ApplicationController
   	#if params[date] exists, save it to dateholder 
   	#else if params[dateholder] exists, save it to dateholder 
   	#else, default value is today
-  	@dateholder = Voucher.new
-  	if params['date']
-  	  @dateholder.date = params['date']
-  	elsif params['dateholder']
-    	@dateholder.date = params['dateholder']['date(1i)']+"-"+
-                    	  params['dateholder']['date(2i)']+"-"+
-                    	  params['dateholder']['date(3i)']
-	  else
-	    @dateholder.date = Date.today.to_s
-	  end
+  	set_dateholder
 
     #load vouchers from database to be displayed
     @vouchers =Voucher.where(date: @dateholder.date).order(:voucher_account_id)
@@ -148,5 +155,21 @@ class VouchersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def voucher_params
       params.require(:voucher).permit(:no, :date, :payee, :description, :amount, :voucher_account_id)
+    end
+    
+    def set_dateholder
+    	#if params[date] exists, save it to dateholder 
+    	#else if params[dateholder] exists, save it to dateholder 
+    	#else, default value is today
+    	@dateholder = Voucher.new
+    	if params['date']
+    	  @dateholder.date = params['date']
+    	elsif params['dateholder']
+      	@dateholder.date = params['dateholder']['date(1i)']+"-"+
+                      	  params['dateholder']['date(2i)']+"-"+
+                      	  params['dateholder']['date(3i)']
+	    else
+	      @dateholder.date = Date.today.to_s
+	    end
     end
 end
