@@ -1,3 +1,8 @@
+<% if flash[:notice] %>
+  <div class="notice"><font color=green><%= flash[:notice] %></font></div>
+<% elsif flash[:alert] %>
+  <div class="notice"><font color=red><%= flash[:alert] %></font></div>
+<% end %>
 
 <h1>Dashboard</h2>
 Search Voucher:	<input id=vouchersearchinput autocomplete="off" size=12> 
@@ -9,6 +14,17 @@ Search Voucher:	<input id=vouchersearchinput autocomplete="off" size=12>
   <%= date_select("dateholder", "date", :order => [:month, :day, :year], :use_short_month => true)  %>
   <%= submit_tag("View") %>
 <% end %>
+
+<% 
+today = @dateholder.date
+yesterday = today.yesterday
+tomorrow = today.tomorrow
+%>
+
+    <%= link_to("Yesterday","/vouchers/dashboard?date="+yesterday.to_s); %> | 
+    <%= link_to("Tomorrow","/vouchers/dashboard?date="+tomorrow.to_s); %> | 
+    <%= link_to("Voucher Input Wizard","/vouchers/input_wizard_1?date="+@dateholder.date.to_s) %> | 
+    <%= link_to("Voucher Sorting Wizard","/vouchers/input_wizard_2?date="+@dateholder.date.to_s) %> | 
 
 <hr>
 <table cellpadding=10>
@@ -48,7 +64,7 @@ Search Voucher:	<input id=vouchersearchinput autocomplete="off" size=12>
       <%= text_field_tag(:no, voucher.no, {size:5}) %>
       </form>
     </td>
-    <td><%= voucher.voucher_account.name %></td>
+    <td><% concat voucher.voucher_account.name if voucher.voucher_account %></td>
     <td><%= voucher.payee %></td>
     <td>
       <%= form_tag("/vouchers/editAmount")%>

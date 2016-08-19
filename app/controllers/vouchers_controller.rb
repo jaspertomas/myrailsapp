@@ -9,6 +9,89 @@ class VouchersController < ApplicationController
   end
   def process_input_wizard_1
     set_dateholder
+    
+    input=params['input'];
+    vouchers_created=0
+
+    #parse input
+    lines=input.split("\n");
+    data=[];
+    lines.each do |line|
+      #validate line is not empty, ignore
+      next if line.strip==""
+      
+      #validate format
+      #"--" is separator description and amount
+      #if separator not found, error
+      #if(strpos(line,"--")===false)
+      if(line.scan(/(?=#{"--"})/).count!=3)
+        message="Incorrect format: "+line;
+        flash[:alert] = message
+        flash[:meta] = input
+        return redirect_to(:back) 
+      end
+      
+      #separate description from value
+      segments=line.split("--");
+      no=segments[0].strip;
+      payee=segments[1].strip;
+      desc=segments[2].strip;
+      value=segments[3].strip;
+      
+      #validate that voucher number exists
+      if(no=="")
+        message="Please enter a voucher number for: "+line;
+        flash[:alert] = message
+        flash[:meta] = input
+        return redirect_to(:back) 
+      end
+
+      #validate that payee exists
+      if(payee=="")
+        message="Please enter a payee for: "+line;
+        flash[:alert] = message
+        flash[:meta] = input
+        return redirect_to(:back) 
+      end
+      
+      #validate that description exists
+      if(desc=="")
+        message="Please enter a description for: "+line;
+        flash[:alert] = message
+        flash[:meta] = input
+        return redirect_to(:back) 
+      end
+
+      #validate that value exists
+      if(value=="")
+        message="Please enter a price for: "+line;
+        flash[:alert] = message
+        flash[:meta] = input
+        return redirect_to(:back) 
+      end
+
+      #validate that value is a number
+      if(!value.is_number?)
+        message="Not a number: "+value+" in "+line;
+        flash[:alert] = message
+        flash[:meta] = input
+        return redirect_to(:back) 
+      end
+      
+      #all checks passed 
+      #save data
+      voucher = Voucher.new;
+      voucher.date = @dateholder.date
+      voucher.no = no
+      voucher.payee = payee
+      voucher.description = desc
+      voucher.amount = value
+      voucher.save
+      vouchers_created+=1
+    end
+            
+    message=vouchers_created.to_s+" vouchers successfully created";
+    flash[:alert] = message
     redirect_to vouchers_input_wizard_1_path+"?date="+@dateholder.date.to_s 
   end
   def input_wizard_2
